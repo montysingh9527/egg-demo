@@ -15,6 +15,16 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1676901387616_7332';
 
+  config.mongoose = {
+    url: 'mongodb://127.0.0.1:27017/egg_demo',
+    options: {
+      // useMongoClient: true,
+      // autoReconnect: true,
+      // reconnectTries: Number.MAX_VALUE,
+      // bufferMaxEntries: 0,
+    },
+  }
+
   // 加载 auth 中间件
   // config.middleware = ['auth', "error_handler"];
   // 静态文件路径配置
