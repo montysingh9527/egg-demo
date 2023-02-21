@@ -38,8 +38,13 @@ class RolesController extends BaseController {
     // 根据id查询
     async findOne(){
         const { _id } = this.ctx.params;
+        // 传递_id与路径一致 /find_one/:_id
         const result = await this.go(this.ctx.model.Roles.findOne({_id}));
         this.ctx.body = result;
+
+        // 屏蔽roles_val
+        // const [status, msg , result] = await this.go(this.ctx.model.Roles.findOne({_id},{roles_val:0}).populate("roles"));
+        // this.ctx.body = [ status, msg, {...result.toObject(), roles: result.roles.map(x=>({ name:x.name, val:x.val}))}];
     }
     // 删除
     async remove(){
