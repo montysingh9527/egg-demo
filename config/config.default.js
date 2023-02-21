@@ -37,6 +37,13 @@ module.exports = appInfo => {
   //   enable: true, // default is false
   //   match: '/jwt', // optional
   // }
+  
+  // 去除csrf
+  config.security = {
+    csrf: {
+      enable: false
+    }
+  }
 
   return config;
 };

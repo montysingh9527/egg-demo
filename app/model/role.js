@@ -3,6 +3,7 @@ module.exports = (app) => {
 
   const RoleSchema = new mongoose.Schema({
     name: { type: String, unique: true, required: true },
+    pwd: { type: Number, unique: true, required: [true, "密码不能为空"] },
     access: { type: String, required: true, default: "user" },
     extra: { type: mongoose.Schema.Types.Mixed },
     createdAt: { type: Date, default: Date.now },
@@ -32,6 +33,8 @@ module.exports = (app) => {
   }, 
   // Schema 第二个参数
   {
+    versionKey: false, // 去除版本锁  __v0
+    timestamps: {createdAt:"create_time", updateAt:"update_time"},  // 自动管理创建修改时间
     toObject: { // 属性配置 - 转换成对象时会被调用
       virtuals: true, // 允许虚拟属性
       transform(doc, ret) { // 对返回对象做处理

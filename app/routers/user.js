@@ -5,5 +5,7 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.post('/create', controller.user.create);
+  const adminPrefix = "/v1/admin";
+  const user = "/user";   // 用户模块
+  router.post(adminPrefix + user + '/create', controller.user.create);
 };
