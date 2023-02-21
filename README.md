@@ -88,5 +88,179 @@ https://blog.csdn.net/weixin_45248399/article/details/109627425
 
 ##### mongoose相关
 ```
-修改： indByIdAndUpdate()
+https://www.cnblogs.com/shapeY/p/15100786.html
+
+修改： findByIdAndUpdate()
+
+
+创建：create()
+查询：
+    Model.find( [过滤规则] , [返回字段]) , [配置项] , callback)  
+    返回字段 可以指定需要返回哪些字段，或者指定不需要哪些字段
+    配置项可以限制返回条数，排序规则，跳过文档数量（分页）等等。
+        findOne()：可以根据字段值查询
+        findBy() ： 根据字段查询  例如：findByAge(16) 查询出Age=16的数据
+
+修改：
+    updateOne()：修改一个值，$set插入值
+删除：
+    remove()：  删除数据，可以根据添加删除
+```
+
+##### 使用说明
+```
+Model.find( [过滤规则] , [返回字段]) , [配置项] , callback):
+const p1 = await Person.find({
+      age: {
+        $gte: 12, // age大于等于12
+      },
+      n: {
+        $in: [ 'zhao', 'qian' ], // n是[ 'zhao', 'qian' ]中的一个
+      },
+    }, 
+    'n age -_id', // 返回 n age字段，不返回 _id
+    { 
+      sort: { // 按age降序排序
+        age: -1,
+      },
+      limit: 2, // 只返回两条数据
+    });
+ 
+    console.log(p1);
+    // [ { age: 18, n: 'qian' }, { age: 17, n: 'qian' } ]
+ 
+    // 以下是通过工具函数的等价写法
+ 
+    const p2 = await Person
+      .find({})
+      .gte('age', 12)
+      .where('n')
+      .in([ 'zhao', 'qian' ])
+      .select('n age -_id')
+      .limit(2)
+      .sort({
+        age: -1,
+      });
+ 
+    console.log(p2);
+    // [ { age: 18, n: 'qian' }, { age: 17, n: 'qian' } ]
+
+
+查询：
+Model.findOne | Model.findById()
+>>> findOne的使用方式和find一样，适用于只查询一条数据
+   const p3 = await Person.findOne({
+      age: {
+        $gte: 12,
+      },
+      n: {
+        $in: [ 'zhao', 'qian' ],
+      },
+    }, 'n age -_id', {
+      sort: {
+        age: -1,
+      },
+    });
+ 
+    console.log(p3);
+    // { age: 18, n: 'qian' }
+>>> 如果过滤条件是 _id，可以使用 findById
+    const p4 = await Person.findById('61090d4287e3a9a69c50c842', 'n age -_id');
+
+
+更新
+第二种 写法默认不会触发校验(通过配置项可以设置校验)，只会触发特定的中间件；
+
+    // 没有触发校验
+    wait Person.updateOne({
+      _id: ObjectId('61090d4287e3a9a69c50c842'),
+    }, {
+      address: 'guizhou',
+    });
+ 
+    // 增加配置项 {runValidators: true,} 可触发校验
+
+update系列的方法主要有：
+    Model.updateOne()
+    Model.updateMany()
+    Model.findByIdAndUpdate()
+    Model.findOneAndUpdate()
+updateOne和updateMany的使用方式基本一致，只是一个只会更新第一条数据，一个会更新所有符合条件的数据。
+
+updateXXX([过滤条件],[更新数据],[配置项],[callback])
+过滤条件和find的规则一样
+更新数据默认为$set操作符，即更新传入的字段，其他的操作符和mongodb保持一致，查看详情
+配置项可配置是否进行校验，是否进行数据覆盖，是否能批量更新等等，不同的方法稍有不同，详见每个API的文档
+findByIdAndUpdate 和 findOneAndUpdate 主要是会返回查询到的数据（更新之前的）。
+
+ const a = await Person.findByIdAndUpdate({
+      _id: '61090d4287e3a9a69c50c842',
+    }, {
+      address: 'hubei',
+    });
+ 
+    console.log(a);
+  // {
+  //   age: 16,
+  //   _id: 61090d4287e3a9a69c50c842,
+  //   n: 'testlei',
+  //   address: 'guizhou', // 更新之前的数据
+  //   __v: 0
+  // }
+ 
+    // 增加 {overwrite: true} 配置可进行数据覆盖
+
+
+删除
+remove系列的方法主要有
+    Model.remove() 删除所有符合规则的数据
+    Model.findOneAndRemove() 删除符合规则的第一条
+    Model.findByIdAndDelete() 根据ID删除
+    findOneAndRemove(),Model.findByIdAndDelete() 除了会删除对应的数据，还会返回查询结果。
+const a = await Person.remove({
+      _id: ObjectId('61090d4287e3a9a69c50c842'),
+    });
+ 
+    console.log(a.deletedCount); 
+    // 1    
+ 
+    // 删除Persons集合的所有数据
+    await Person.remove({});
+ 
+    
+    const a = await Person.findOneAndRemove({
+      n: 'zhao',
+    });
+ 
+    console.log(a);
+    // {
+    //   age: 16,
+    //   _id: 6109121467d113aa2c3f4464,
+    //   n: 'zhao',
+    //   address: 'hubei',
+    //   __v: 0
+    // }
+```
+
+```
+查询常用的过滤规则及对应的工具函数如下：
+
+工具函数	过滤操作符	含义	使用方式
+eq()	$eq	与指定值相等	{ <field>: { $eq: <value> } }
+ne()	$ne	与指定值不相等	{ <field>: { $ne: <value> } }
+gt()	$gt	大于指定值	{field: {$gt: value} }
+gte()	$gte	大于等于指定值	{field: {$gte: value} }
+lt()	$lt	小于指定值	{field: {$lt: value} }
+lte()	$lte	小于等于指定值	{field: {$lte: value} }
+in()	$in	与查询数组中指定的值中的任何一个匹配	{ field: { $in: [<value1>, <value2>, ... <valueN> ] } }
+nin()	$nin	与查询数组中指定的值中的任何一个都不匹配	{ field: { $nin: [ <value1>, <value2> ... <valueN> ]} }
+and()	$and	满足数组中指定的所有条件	{ $and: [ { <expression1> }, { <expression2> } , ... , { <expressionN> } ] }
+nor()	$nor	不满足数组中指定的所有条件	{ $nor: [ { <expression1> }, { <expression2> }, ... { <expressionN> } ] }
+or()	$or	满足数组中指定的条件的其中一个	{ $or: [ { <expression1> }, { <expression2> }, ... , { <expressionN> } ] }
+not()	$not	反转查询，返回不满足指定条件的文档	{ field: { $not: { <operator-expression> } } }
+regex()	$regex	可以被指定正则匹配	{ <field>: { $regex: /pattern/, $options: '<options>' } } { <field>: { $regex: 'pattern', $options: '<options>' } } { <field>: { $regex: /pattern/<options> } }
+exists()	$exists	匹配存在指定字段的文档	{ field: { $exists: <boolean> } }
+type()	$type	返回字段属于指定类型的文档	{ field: { $type: <BSON type> } }
+size()	$size	数组字段的长度与指定值一致	{ <field>: { $size: <value> } }
+all()	$all	数组中包含所有的指定值	{ <field>: { $all: [ <value1> , <value2> ... ] } }
 ```
