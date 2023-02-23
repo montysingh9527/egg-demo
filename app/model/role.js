@@ -10,8 +10,17 @@ module.exports = (app) => {
     address: { country: String, city: String, area: String },
     roles_log: { type: Array },
     tag: { type: [] },
+    categories:[{ type: ObjectId, required:[true,"请选择产品分类"], ref: "Categories"}],
+    prices: [{ name: String, retail: Number, cost: Number}],
     careate_time: { type: Date },
     author: { type: ObjectId },
+    id: {
+      type: Number,
+      unique: true,
+      require: true,
+      default: () => app.createUuid(6, 10), // 用函数的方法，就不会每次都是固定值了
+    },
+    createdDate: { type: Date, default: () => new Date() },
     age:{
       type: Number, // 类型
       required: true, // 校验规则 - 必须

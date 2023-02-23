@@ -41,7 +41,7 @@ class loginController extends Controller {
     const pagesParams = {
         skip: Number((current - 1)*size),
         limit: Number(size),
-        sort: {"_id": -1}
+        sort: {"_id": -1},  // 默认返回的数据按照创建时间排序，-1为逆序，1为顺序
     }
     let result;
     [status, msg, result] = await ctx.model.Products.find(findParams,{},pagesParams).populate("roles")
