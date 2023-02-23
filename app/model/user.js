@@ -1,6 +1,8 @@
 module.exports = (app) => {
   const { mongoose } = app;
+  // 引入模式对象
   const { Schema } = mongoose;
+  // 创建约束对象
   const mySchema = new Schema({
     name: { type: String },
     val: { type: String },
@@ -20,7 +22,7 @@ module.exports = (app) => {
     mobile: { type: String, unique: true, match: [ /^1\d{10}$/, '手机号码格式不对' ] },
     email: { type: String, match: [ /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/, '邮箱格式不对' ] },
   });
-
+  // 创建模型对象
   const Model = mongoose.model("User", mySchema);
 
   return Model;

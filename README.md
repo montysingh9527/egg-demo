@@ -109,6 +109,11 @@ https://www.cnblogs.com/shapeY/p/15100786.html
 
 ##### 常用操作符
 ```
+---creat(新增数据)：
+  db.集合名.insert(文档对象)
+  db.集合名.insertOne(文档对象)
+  db.集合名.insertMany(文档对象, 文档对象)
+
 1、 < $lt  <= $lte  > $gt  >= $gte   !== $ne
    示例： db.集合名.find({age:{$gte: 20}}), 年龄是大于等于20的
 2、逻辑或：使用$in 或 $or
@@ -121,12 +126,28 @@ https://www.cnblogs.com/shapeY/p/15100786.html
     db.students.find({$where: function(){
       return this.name === "zhangsan" && this.age === 18
     }})
-
+---read查询
 过滤掉不想要的数据,只保留想要展示的数据
   db.集合名.findOne(查询条件[,投影])    默认只要找到一个
   举例：db.students.find({},{_id:0, name:0})   过滤掉id和name
   举例：db.students.find({},{age:1})   只保留age
 
+---update:更新
+  db.集合.update(查询条件,要更新的内容,[,配置对象])
+    举例：db.students.update({name:"zhangsan"}, {age: 19})
+
+  // 使用$set修改指定内容,其它数据不变,不过只能匹配一个zhangsan
+    举例：db.students.update({name:"zhangsan"},{$set: {age: 19}})
+
+  // 修改多个文档对象,匹配多个zhangsan,把所有zhangsan的年龄都替换为19
+    举例：db.students.update({name:"zhangsan"},{$set:{age:19}},{multi: true})
+
+  补充：db.集合名.updateOne(查询条件,要更新的内容[,配置对象]) 
+       db.集合名.updateMany(查询条件,要更新的内容[,配置对象])
+---delete:删除
+  db.集合名.remove(查询条件)
+    // 删除所有年龄小于等于19的学生
+    举例：db.students.remove({age:{$lte:19}})
 ```
 
 ##### 使用说明
