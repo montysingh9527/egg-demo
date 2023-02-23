@@ -107,6 +107,28 @@ https://www.cnblogs.com/shapeY/p/15100786.html
     remove()：  删除数据，可以根据添加删除
 ```
 
+##### 常用操作符
+```
+1、 < $lt  <= $lte  > $gt  >= $gte   !== $ne
+   示例： db.集合名.find({age:{$gte: 20}}), 年龄是大于等于20的
+2、逻辑或：使用$in 或 $or
+    查找年龄为18或20的学生
+      举例1：db.students.find({age:{$in:[18,20]}})
+      举例2：db.students.find({$or:[{age:18},{age:20}]})
+3、逻辑非： $nin
+4、正则匹配：举例：db.students.find({name:/^T/})
+5、$where能写函数：
+    db.students.find({$where: function(){
+      return this.name === "zhangsan" && this.age === 18
+    }})
+
+过滤掉不想要的数据,只保留想要展示的数据
+  db.集合名.findOne(查询条件[,投影])    默认只要找到一个
+  举例：db.students.find({},{_id:0, name:0})   过滤掉id和name
+  举例：db.students.find({},{age:1})   只保留age
+
+```
+
 ##### 使用说明
 ```
 Model.find( [过滤规则] , [返回字段]) , [配置项] , callback):
