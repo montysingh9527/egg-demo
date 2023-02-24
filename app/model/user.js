@@ -4,6 +4,10 @@ module.exports = (app) => {
   const { Schema } = mongoose;
   // 创建约束对象
   const mySchema = new Schema({
+    sn:{ //设置索引，我们暂且把sn理解为用户绑定的设备
+      type:String,
+      index:true,//设置索引的方法
+    },
     name: { type: String },
     val: { type: String },
     create_time: { type: Date },
