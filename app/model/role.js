@@ -4,6 +4,7 @@ module.exports = (app) => {
   const RoleSchema = new mongoose.Schema({
     name: { type: String, unique: true, required: true },
     pwd: { type: Number, unique: true, required: [true, "密码不能为空"] },
+    password: { type: String, required: true, select: false }, // 隐私字段 select: false
     access: { type: String, required: true, default: "user" },
     extra: { type: mongoose.Schema.Types.Mixed },
     createdAt: { type: Date, default: Date.now },
@@ -14,6 +15,9 @@ module.exports = (app) => {
     prices: [{ name: String, retail: Number, cost: Number}],
     careate_time: { type: Date },
     author: { type: ObjectId },
+    following: {
+      type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    },
     id: {
       type: Number,
       unique: true,
@@ -43,6 +47,7 @@ module.exports = (app) => {
   // Schema 第二个参数
   {
     versionKey: false, // 去除版本锁  __v0
+    // timestamps: false, // timestamps: false 去除两个字段 createTime updateTime
     timestamps: {createdAt:"create_time", updateAt:"update_time"},  // 自动管理创建修改时间
     toObject: { // 属性配置 - 转换成对象时会被调用
       virtuals: true, // 允许虚拟属性
@@ -70,6 +75,13 @@ module.exports = (app) => {
     return this.find({
       age: num,
     });
+  };
+  /**
+   * 定义静态函数。 //登录匹配是不是拥有相同的用户名和密码并且没有处于封停状态
+   * 静态方法使用：模型类.方法  user.findUserLogin(req.body.username, req.body.password, function (err, userSave) {} )
+   */
+  user.statics.findUserLogin = function(name,password,callBack){
+    this.find({username:name,password:password,userStop:false},callBack);
   };
 
   // 定义中间件

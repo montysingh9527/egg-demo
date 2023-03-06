@@ -5,5 +5,7 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.post('/home', controller.home.index);
+  const jwt = app.middleware.jwt({ app });
+  // 单路由插入jwt验证
+  router.post('/home',jwt, controller.home.index);
 };

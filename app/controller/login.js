@@ -54,7 +54,32 @@ class loginController extends Controller {
 
   }
 
-
+  // jwt
+  async jwtlogin() {
+    const { ctx, app } = this;
+    const { email, password } = ctx.request.body;
+    // 查询用户是否存在
+    // 先查用户名是否存在
+    // 再查密码是否正确
+    const user = await ctx.model.User.findOne({
+      email,
+      password: md5(password + 'ruixue@0702'),
+    });
+    if (user) {
+      // 生成 token 返回
+      const { nickname } = user;
+      const token = app.jwt.sign({
+        nickname,
+        email,
+        id: user._id,
+      }, app.config.jwt.secret, {
+        expiresIn: '24h',
+      });
+      this.success({ token, email });
+    } else {
+      this.error('用户名或者密码错误');
+    }
+  }
 
 
 }

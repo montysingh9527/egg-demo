@@ -26,12 +26,14 @@ module.exports = appInfo => {
   }
 
   // 加载 auth 中间件 配置中间件auth为middleware目录下的文件名。 中间件会在每次路由变化时执行
-  // config.middleware = ['auth', "error_handler"，"forbidIp"];
+  // config.middleware = ['auth', "error_handler"，"forbidIp","jwt"];
   // 给auth中间件传入的options参数
   // config.auth = {
   //   aaa:"aaaa"
   // }
-
+  config.jwt={
+    secret: 'ruixue0702',
+  };
 
   // 静态文件路径配置
   config.static = {
