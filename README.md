@@ -110,6 +110,8 @@ https://www.cnblogs.com/shapeY/p/15100786.html
 ##### 常用操作符 
 ```
 mongoDB工具：https://studio3t.com/    Studio 3T, the professional GUI for MongoDB.
+Robomongo 
+nosql
 如果没有指定回调函数，则返回值是一个Promise的实例
 ---creat(新增数据)：
   db.集合名.insert(文档对象)
