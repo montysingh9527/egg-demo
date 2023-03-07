@@ -71,6 +71,7 @@ http://nodejs.cn/api-v16/fs.html
 ```
 https://github.com/cnodejs/egg-cnode/blob/master/config/plugin.js
 https://github.com/heimi-block/egg-RESTfulAPI/blob/master/app/controller/user.js
+https://github.com/LHongHui/node-egg-server/blob/master/app/model/access.js
 ```
 
 ##### 相关项目  egg + mysql
