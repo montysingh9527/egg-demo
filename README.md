@@ -115,6 +115,8 @@ https://www.cnblogs.com/shapeY/p/15100786.html
 mongoDB工具：https://studio3t.com/    Studio 3T, the professional GUI for MongoDB.
 Robomongo 
 nosql
+postman请求工具：https://insomnia.rest/pricing
+
 如果没有指定回调函数，则返回值是一个Promise的实例
 ---creat(新增数据)：
   db.集合名.insert(文档对象)
@@ -159,6 +161,8 @@ nosql
 
 ##### 使用说明
 ```
+node：https://lurongtao.gitee.io/felixbooks-gp19-node.js/basics/01-Node.js%E5%9F%BA%E7%A1%80.html
+
 Model.find( [过滤规则] , [返回字段]) , [配置项] , callback):
 const p1 = await Person.find({
       age: {
